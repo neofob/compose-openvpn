@@ -1,7 +1,7 @@
 Quickly spin up openvpn server with docker using docker-compose
 ===============================================================
 This is based on [`kylemanna/openvpn`][0] docker image. See
-their [*documents*] on how to setup the keys and what not.
+their [*documents*][1] on how to setup the keys and what not.
 
 
 All default settings are in [`default_settings.env`][2].
