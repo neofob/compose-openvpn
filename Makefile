@@ -20,6 +20,7 @@ OVPN_RPORT ?=443
 OVPN_CLIENT ?=vagrant
 
 OVPN_KEY_SIZE ?=4096
+OVPN_SERVER_FILE ?=/tmp/server.tar.xz
 
 
 env: volume passwd genconfig
@@ -54,10 +55,10 @@ save_server:
 	docker run -v ${OVPN_DATA}:/etc/openvpn \
 		--rm ${OVPN_IMG}:${OVPN_TAG} \
 		tar -cvf - -C /etc/openvpn/server . \
-		| xz > server.tar.xz
+		| xz > ${OVPN_SERVER_FILE}
 
 load_server:
-	xzcat server.tar.xz | \
+	xzcat ${OVPN_SERVER_FILE} | \
 	docker run -v ${OVPN_DATA}:/etc/openvpn \
 		--rm -i ${OVPN_IMG}:${OVPN_TAG} \
 		tar -xvf - -C /etc/openvpn
