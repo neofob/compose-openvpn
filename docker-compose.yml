@@ -6,7 +6,7 @@ services:
     cap_add:
       - NET_ADMIN
     # Build your own latest openvpn image
-    image: ${OPENVPN_IMG}
+    image: ${OVPN_IMG}:${OVPN_TAG}
     container_name: openvpn
     ports:
       # Use public ports like 433 or 8080 or something else

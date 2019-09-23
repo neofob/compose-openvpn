@@ -2,26 +2,9 @@
 #
 # __author__: tuan t. pham
 
-OVPN_IMG ?=kylemanna/openvpn
-#OVPN_IMG ?=neofob/openvpn
-OVPN_TAG ?=latest
-
-OVPN_DATA ?=openvpn-data
-OVPN_PASSWD ?=ovpn_passwd.txt
-OVPN_CIPHER ?=AES-256-CBC
-OVPN_AUTH ?=SHA384
-OVPN_PROTO ?=udp
-# Common Name
-OVPN_CN ?=neofob.info
-
-# Set this to your remote openvpn host
-OVPN_RHOST ?=openvpn.local
-OVPN_RPORT ?=443
-OVPN_CLIENT ?=vagrant
-
-OVPN_KEY_SIZE ?=4096
-OVPN_SERVER_FILE ?=/tmp/server.tar.xz
-
+# Load environment settings
+include .env
+include .makefile_rc
 
 env: volume passwd genconfig
 
@@ -33,12 +16,20 @@ passwd:
 
 genconfig:
 	docker run --net=none --rm -it \
+		-e OVPN_RNDFILE=/dev/random \
 		-v ${OVPN_DATA}:/etc/openvpn \
 		${OVPN_IMG}:${OVPN_TAG} ovpn_genconfig \
 		-C '${OVPN_CIPHER}' \
 		-a '${OVPN_AUTH}' \
 		-z \
 		-u ${OVPN_PROTO}://${OVPN_RHOST}:${OVPN_RPORT}
+
+gen_rand:
+	docker run --net=none --rm -it \
+		-v ${OVPN_DATA}:/etc/openvpn \
+		--entrypoint /bin/sh \
+		${OVPN_IMG}:${OVPN_TAG} \
+		-c "mkdir /etc/openvpn/pki && /bin/dd if=/dev/random of=/etc/openvpn/pki/.rnd bs=256 count=1"
 
 server:
 	docker run -e EASYRSA_KEY_SIZE=${OVPN_KEY_SIZE} \
@@ -84,3 +75,34 @@ list:
 		--rm \
 		${OVPN_IMG}:${OVPN_TAG} \
 		ovpn_listclients
+
+help:
+	@echo	"A simple Makefile to speedup openvpn keys generating and deploying."
+	@echo	"\033[1;31mAvailable targets:\033[0m"
+	@echo
+	@echo	"\033[1;31mhelp:\033[0m"
+	@echo	"\tThis help message"
+	@echo
+	@echo	"\033[1;31menv:\033[0m"
+	@echo	"\tSetup the environment before generating server/client keys with these:"
+	@echo	"\t* Docker volume '$(OVPN_DATA)'"
+	@echo	"\t* Random password for self-signed cert in '$(OVPN_PASSWD)'"
+	@echo	"\t* Generate default config in docker volume  '$(OVPN_DATA)'"
+
+dump_env:
+	@echo	"Dump environment variables:"
+	@echo	"OVPN_IMG=$(OVPN_IMG)"
+	@echo	"OVPN_TAG=$(OVPN_TAG)"
+	@echo	"OVPN_DATA=$(OVPN_DATA)"
+	@echo	"OVPN_PASSWD=$(OVPN_PASSWD)"
+	@echo	"OVPN_CIPHER=$(OVPN_CIPHER)"
+
+	@echo	"OVPN_AUTH=$(OVPN_AUTH)"
+	@echo	"OVPN_PROTO=$(OVPN_PROTO)"
+	@echo	"OVPN_CN=$(OVPN_CN)"
+	@echo	"OVPN_RHOST=$(OVPN_RHOST)"
+	@echo	"OVPN_RPORT=$(OVPN_RPORT)"
+
+	@echo	"OVPN_CLIENT=$(OVPN_CLIENT)"
+	@echo	"OVPN_KEY_SIZE=$(OVPN_KEY_SIZE)"
+	@echo	"OVPN_SERVER_FILE=$(OVPN_SERVER_FILE)"
