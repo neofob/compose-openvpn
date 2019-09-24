@@ -63,6 +63,26 @@ $ make get_client
 $ make OVPN_CLIENT=mickey get_client
 ```
 
+
+Default Environment Variables
+=============================
+
+| `Env Variable`  | `Value` |
+|:---------------:|:-------:|
+| OVPN_IMG        | kylemanna/openvpn |
+| OVPN_TAG        | latest |
+| OVPN_DATA       | openvpn-data |
+| OVPN_PASSWD     | ovpn_passwd.txt |
+| OVPN_CIPHER     | AES-256-CBC |
+| OVPN_AUTH       | SHA384 |
+| OVPN_PROTO      | udp |
+| OVPN_CN         | neofob.info |
+| OVPN_RHOST      | openvpn.local |
+| OVPN_RPORT      | 443 |
+| OVPN_CLIENT     | vagrant |
+| OVPN_KEY_SIZE   | 4096 |
+| OVPN_SERVER_FILE | /tmp/server.tar.xz |
+
 __author__: *tuan t. pham*
 
 

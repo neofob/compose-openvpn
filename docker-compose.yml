@@ -10,10 +10,10 @@ services:
     container_name: openvpn
     ports:
       # Use public ports like 433 or 8080 or something else
-      - "1194:1194/udp"
+      - "${OVPN_RPORT:-1194}:1194/udp"
     restart: always
     volumes:
-      - openvpn-data:/etc/openvpn
+      - openvpn-data:/etc/openvpn:ro
     command:
       - ovpn_run
       - --cipher
