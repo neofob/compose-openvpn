@@ -1,5 +1,7 @@
 A brief note on generate keys and all
 =====================================
+*Use `make` workflow in README.md to speed up the process*
+
 * Generating server key
 * Generating client key
 * Save files for server
