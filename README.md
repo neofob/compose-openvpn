@@ -78,7 +78,7 @@ Default Environment Variables
 | OVPN_IMG        | kylemanna/openvpn |
 | OVPN_TAG        | latest |
 | OVPN_DATA       | openvpn-data |
-| OVPN_PASSWD     | ovpn_passwd.txt |
+| OVPN_PASSWD     | /tmp/ovpn_passwd.txt |
 | OVPN_CIPHER     | AES-256-CBC |
 | OVPN_AUTH       | SHA384 |
 | OVPN_PROTO      | udp |
