@@ -27,12 +27,14 @@ Setup the environment
 ```
 $ make env
 ```
-**Note:** A generated random password is saved to CWD file `ovpn_passwd.txt`. You should
-move it a safe place. You should set the environment `OVPN_PASSWD` to
-`/tmp/ovpn_passwd.txt` of which `/tmp` is mounted as `tmpfs`.
+**Note:** A generated random password is saved to `/tmp/ovpn_passwd.txt`. You should
+move it to a safe place. (preferably, /tmp is `tmpfs`).
+
 
 Generate server files
 =====================
+You will be asked for password which is saved from `make env` step. You could paste it here
+from `cat /tmp/ovpn_passwd.txt | xclip -selection c`
 ```
 $ make server
 ```
@@ -41,12 +43,16 @@ $ make server
 $ make save_server
 ```
 **Load server files**
+On the server machine that will run the openvpn server.
 ```
+# Make sure a volume is created
+$ make volume
 $ make load_server
 ```
 
 Generate client file(s)
 =======================
+You will need to enter the generated password from the `make env` step.
 ```
 # default client vagrant
 $ make client
@@ -56,7 +62,7 @@ $ make OVPN_CLIENT=mickey client
 ```
 **Get client file(s)**
 ```
-# get default client
+# get default client set in OVPN_CLIENT env variable
 $ make get_client
 
 # get a specific client
@@ -83,8 +89,13 @@ Default Environment Variables
 | OVPN_KEY_SIZE   | 4096 |
 | OVPN_SERVER_FILE | /tmp/server.tar.xz |
 
-__author__: *tuan t. pham*
 
+**Footnote:** As of `alpine:3.10.2`, there is a bug that when you run `make server`,
+the script/program `easyrsa` in `kylemanna/openvpn` will complain about failing to read
+`/etc/openvpn/pki/.rnd`. Build your own `OVPN_IMG` from [`docker-openvpn`][0] with `alpine:3.8`
+as your base image.
+
+__author__: *tuan t. pham*
 
 [0]: https://github.com/kylemanna/docker-openvpn
 [1]: https://github.com/kylemanna/docker-openvpn/tree/master/docs

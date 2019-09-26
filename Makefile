@@ -55,15 +55,19 @@ client:
 		easyrsa build-client-full ${OVPN_CLIENT} nopass
 
 get_client:
-	docker run -e EASYRSA_KEY_SIZE=${OVPN_KEY_SIZE} \
-		-v ${OVPN_DATA}:/etc/openvpn \
+	docker run -v ${OVPN_DATA}:/etc/openvpn \
 		--rm -it \
 		${OVPN_IMG}:${OVPN_TAG} \
 		ovpn_getclient ${OVPN_CLIENT} > ${OVPN_CLIENT}.ovpn
 
+get_all:
+	@echo "Get all clients (written to /etc/openvpn/clients in ${OVPN_DATA}"
+	docker run -v ${OVPN_DATA}:/etc/openvpn \
+		--rm -it \
+		${OVPN_IMG}:${OVPN_TAG} \
+		ovpn_getclient_all
 list:
-	docker run \
-		-v ${OVPN_DATA}:/etc/openvpn \
+	docker run -v ${OVPN_DATA}:/etc/openvpn \
 		--log-driver=none \
 		--rm \
 		${OVPN_IMG}:${OVPN_TAG} \
@@ -117,6 +121,7 @@ help:
 	@echo	"\033[1;31mdump_env:\033[0m"
 	@echo	"\tDump environment settings"
 	@echo
+	@echo	"__author__: tuan t. pham"
 
 dump_env:
 	@echo	"Dump environment variables:"
