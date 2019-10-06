@@ -16,7 +16,6 @@ passwd:
 
 genconfig:
 	docker run --net=none --rm -it \
-		-e OVPN_RNDFILE=/dev/random \
 		-v ${OVPN_DATA}:/etc/openvpn \
 		${OVPN_IMG}:${OVPN_TAG} ovpn_genconfig \
 		-C '${OVPN_CIPHER}' \
@@ -25,14 +24,15 @@ genconfig:
 		-u ${OVPN_PROTO}://${OVPN_RHOST}:${OVPN_RPORT}
 
 server:
-	docker run -e EASYRSA_KEY_SIZE=${OVPN_KEY_SIZE} \
+	docker run \
+		-e EASYRSA_KEY_SIZE=${OVPN_KEY_SIZE} \
 		-v ${OVPN_DATA}:/etc/openvpn \
 		--rm -it \
 		${OVPN_IMG}:${OVPN_TAG} \
 		ovpn_initpki
 
 save_server:
-	docker run -e EASYRSA_KEY_SIZE=${OVPN_KEY_SIZE} \
+	docker run \
 		-v ${OVPN_DATA}:/etc/openvpn \
 		--rm -it ${OVPN_IMG}:${OVPN_TAG} \
 		ovpn_copy_server_files

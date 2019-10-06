@@ -13,7 +13,7 @@ services:
       - "${OVPN_RPORT:-1194}:1194/udp"
     restart: always
     volumes:
-      - openvpn-data:/etc/openvpn:ro
+      - openvpn-data:/etc/openvpn
     command:
       - ovpn_run
       - --cipher
