@@ -18,6 +18,7 @@ genconfig:
 	docker run --net=none --rm -it \
 		-v ${OVPN_DATA}:/etc/openvpn \
 		${OVPN_IMG}:${OVPN_TAG} ovpn_genconfig \
+		-s ${OVPN_SERVER} \
 		-C '${OVPN_CIPHER}' \
 		-a '${OVPN_AUTH}' \
 		-z \
@@ -113,7 +114,7 @@ help:
 	@echo	"\033[1;31mget_client:\033[0m"
 	@echo	"\tGet client to '$(PWD)/$(OVPN_CLIENT).ovpn'"
 	@echo	"\tCustom name:"
-	@echo	"\tmake OVPN_CLIENT=custom_name client"
+	@echo	"\tmake OVPN_CLIENT=custom_name get_client"
 	@echo
 	@echo	"\033[1;31mlist:\033[0m"
 	@echo	"\tList available client keys"
@@ -140,3 +141,13 @@ dump_env:
 	@echo	"OVPN_CLIENT=$(OVPN_CLIENT)"
 	@echo	"OVPN_KEY_SIZE=$(OVPN_KEY_SIZE)"
 	@echo	"OVPN_SERVER_FILE=$(OVPN_SERVER_FILE)"
+	@echo	"OVPN_SERVER=${OVPN_SERVER}"
+
+
+rm_env: rm_volume rm_passwd
+
+rm_volume:
+	docker volume rm ${OVPN_DATA}
+
+rm_passwd:
+	rm ${OVPN_PASSWD}
