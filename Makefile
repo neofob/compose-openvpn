@@ -14,11 +14,13 @@ volume:
 passwd:
 	./genpass.sh > ${OVPN_PASSWD}
 
+# Add these if you need to customize
+# -s subnet
+# -r routing
 genconfig:
 	docker run --net=none --rm -it \
 		-v ${OVPN_DATA}:/etc/openvpn \
 		${OVPN_IMG}:${OVPN_TAG} ovpn_genconfig \
-		-s ${OVPN_SERVER} \
 		-C '${OVPN_CIPHER}' \
 		-a '${OVPN_AUTH}' \
 		-z \
@@ -59,7 +61,7 @@ get_client:
 	docker run -v ${OVPN_DATA}:/etc/openvpn \
 		--rm -it \
 		${OVPN_IMG}:${OVPN_TAG} \
-		ovpn_getclient ${OVPN_CLIENT} > ${OVPN_CLIENT}.ovpn
+		ovpn_getclient ${OVPN_CLIENT} > ${OVPN_OUTPUT_DIR}/${OVPN_CLIENT}.ovpn
 
 get_all:
 	@echo "Get all clients (written to /etc/openvpn/clients in ${OVPN_DATA}"
