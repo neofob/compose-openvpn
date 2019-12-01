@@ -140,11 +140,10 @@ dump_env:
 	@echo	"OVPN_RHOST=$(OVPN_RHOST)"
 	@echo	"OVPN_RPORT=$(OVPN_RPORT)"
 
+	@echo	"OVPN_OUTPUT_DIR=$(OVPN_OUTPUT_DIR)"
 	@echo	"OVPN_CLIENT=$(OVPN_CLIENT)"
 	@echo	"OVPN_KEY_SIZE=$(OVPN_KEY_SIZE)"
 	@echo	"OVPN_SERVER_FILE=$(OVPN_SERVER_FILE)"
-	@echo	"OVPN_SERVER=${OVPN_SERVER}"
-
 
 rm_env: rm_volume rm_passwd
 
