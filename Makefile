@@ -18,16 +18,22 @@ passwd:
 # -s subnet
 # -r routing
 genconfig:
-	docker run --net=none --rm -it \
+	docker run --rm \
+		--net=none \
+		--log-driver=none \
 		-v ${OVPN_DATA}:/etc/openvpn \
 		${OVPN_IMG}:${OVPN_TAG} ovpn_genconfig \
 		-C '${OVPN_CIPHER}' \
 		-a '${OVPN_AUTH}' \
+		-n '${OVPN_DNS}' \
+		-r '192.168.42.0/24' \
 		-z \
 		-u ${OVPN_PROTO}://${OVPN_RHOST}:${OVPN_RPORT}
 
 server:
 	docker run \
+		--net=none \
+		--log-driver=none \
 		-e EASYRSA_KEY_SIZE=${OVPN_KEY_SIZE} \
 		-v ${OVPN_DATA}:/etc/openvpn \
 		--rm -it \
@@ -36,10 +42,14 @@ server:
 
 save_server:
 	docker run \
+		--net=none \
+		--log-driver=none \
 		-v ${OVPN_DATA}:/etc/openvpn \
 		--rm -it ${OVPN_IMG}:${OVPN_TAG} \
 		ovpn_copy_server_files
 	docker run -v ${OVPN_DATA}:/etc/openvpn \
+		--net=none \
+		--log-driver=none \
 		--rm ${OVPN_IMG}:${OVPN_TAG} \
 		tar -cvf - -C /etc/openvpn/server . \
 		| xz > ${OVPN_SERVER_FILE}
@@ -47,11 +57,15 @@ save_server:
 load_server:
 	xzcat ${OVPN_SERVER_FILE} | \
 	docker run -v ${OVPN_DATA}:/etc/openvpn \
+		--net=none \
+		--log-driver=none \
 		--rm -i ${OVPN_IMG}:${OVPN_TAG} \
 		tar -xvf - -C /etc/openvpn
 
 client:
 	docker run -e EASYRSA_KEY_SIZE=${OVPN_KEY_SIZE} \
+		--net=none \
+		--log-driver=none \
 		-v ${OVPN_DATA}:/etc/openvpn \
 		--rm -it \
 		${OVPN_IMG}:${OVPN_TAG} \
@@ -59,6 +73,8 @@ client:
 
 get_client:
 	docker run -v ${OVPN_DATA}:/etc/openvpn \
+		--net=none \
+		--log-driver=none \
 		--rm -it \
 		${OVPN_IMG}:${OVPN_TAG} \
 		ovpn_getclient ${OVPN_CLIENT} > ${OVPN_OUTPUT_DIR}/${OVPN_CLIENT}.ovpn
@@ -66,11 +82,14 @@ get_client:
 get_all:
 	@echo "Get all clients (written to /etc/openvpn/clients in ${OVPN_DATA}"
 	docker run -v ${OVPN_DATA}:/etc/openvpn \
+		--net=none \
+		--log-driver=none \
 		--rm -it \
 		${OVPN_IMG}:${OVPN_TAG} \
 		ovpn_getclient_all
 list:
 	docker run -v ${OVPN_DATA}:/etc/openvpn \
+		--net=none \
 		--log-driver=none \
 		--rm \
 		${OVPN_IMG}:${OVPN_TAG} \
