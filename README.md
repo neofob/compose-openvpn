@@ -69,6 +69,17 @@ $ make get_client
 $ make OVPN_CLIENT=mickey get_client
 ```
 
+**Modify client.opvn file to use public ipaddress**
+```
+remote openvpn.local <port> <protocol> 
+==>
+remote <ur-public-ip> <port> <protocol>
+```
+
+**Start up Openvpn service**
+```
+docker-compose up -d && docker-compose logs --follow
+```
 
 Default Environment Variables
 =============================
