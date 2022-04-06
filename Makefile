@@ -54,8 +54,24 @@ save_server:
 		tar -cvf - -C /etc/openvpn/server . \
 		| xz > ${OVPN_SERVER_FILE}
 
+save_pki:
+	docker run -v ${OVPN_DATA}:/etc/openvpn \
+		--net=none \
+		--log-driver=none \
+		--rm ${OVPN_IMG}:${OVPN_TAG} \
+		tar -cvf - -C /etc/openvpn/pki . \
+		| xz > ${OVPN_PKI_FILE}
+
+
 load_server:
 	xzcat ${OVPN_SERVER_FILE} | \
+	docker run -v ${OVPN_DATA}:/etc/openvpn \
+		--net=none \
+		--log-driver=none \
+		--rm -i ${OVPN_IMG}:${OVPN_TAG} \
+		tar -xvf - -C /etc/openvpn
+load_pki:
+	xzcat ${OVPN_PKI_FILE} | \
 	docker run -v ${OVPN_DATA}:/etc/openvpn \
 		--net=none \
 		--log-driver=none \
