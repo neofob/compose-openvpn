@@ -86,15 +86,15 @@ Default Environment Variables
 
 | `Env Variable`  | `Value` |
 |:---------------:|:-------:|
-| OVPN_IMG        | kylemanna/openvpn |
+| OVPN_IMG        | neofob/openvpn |
 | OVPN_TAG        | latest |
 | OVPN_DATA       | openvpn-data |
 | OVPN_PASSWD     | /tmp/ovpn_passwd.txt |
-| OVPN_CIPHER     | AES-256-CBC |
-| OVPN_AUTH       | SHA384 |
+| OVPN_CIPHER     | AES-256-GCM |
+| OVPN_AUTH       | SHA512 |
 | OVPN_PROTO      | udp |
-| OVPN_CN         | neofob.info |
-| OVPN_RHOST      | openvpn.local |
+| OVPN_CN         | change.me |
+| OVPN_RHOST      | change.me |
 | OVPN_RPORT      | 443 |
 | OVPN_CLIENT     | vagrant |
 | OVPN_KEY_SIZE   | 4096 |

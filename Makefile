@@ -6,13 +6,15 @@
 include .env
 include .makefile_rc
 
+.PHONY: volume passwd genconfig
+
 env: volume passwd genconfig
 
 volume:
 	docker volume create ${OVPN_DATA}
 
 passwd:
-	./genpass.sh > ${OVPN_PASSWD}
+	${OVPN_SCRIPTS}/genpass.sh > ${OVPN_PASSWD}
 
 # Add these if you need to customize
 # -s subnet
@@ -23,13 +25,15 @@ genconfig:
 		--log-driver=none \
 		-v ${OVPN_DATA}:/etc/openvpn \
 		${OVPN_IMG}:${OVPN_TAG} ovpn_genconfig \
-		-C '${OVPN_CIPHER}' \
-		-a '${OVPN_AUTH}' \
-		-n '${OVPN_DNS}' \
-		-r '192.168.42.0/24' \
-		-z \
-		-u ${OVPN_PROTO}://${OVPN_RHOST}:${OVPN_RPORT}
+		-u "${OVPN_PROTO}://${OVPN_RHOST}:${OVPN_RPORT}" \
+		-e 'topology subnet' \
+		-n ${OVPN_DNS} \
+		-r 192.168.42.0/24 \
+		-s 192.168.42.0/24 \
+		-C ${OVPN_CIPHER} \
+		-a ${OVPN_AUTH}
 
+.PHONY: server save_server save_pki load_server load_pki client get_client get_all list help
 server:
 	docker run \
 		--net=none \
@@ -96,13 +100,10 @@ get_client:
 		ovpn_getclient ${OVPN_CLIENT} > ${OVPN_OUTPUT_DIR}/${OVPN_CLIENT}.ovpn
 
 get_all:
-	@echo "Get all clients (written to /etc/openvpn/clients in ${OVPN_DATA}"
-	docker run -v ${OVPN_DATA}:/etc/openvpn \
-		--net=none \
-		--log-driver=none \
-		--rm -it \
-		${OVPN_IMG}:${OVPN_TAG} \
-		ovpn_getclient_all
+	@echo "Get all clients to ${OVPN_OUTPUT_DIR}"
+	@echo -n "Running "
+	./scripts/save_clients.sh
+
 list:
 	docker run -v ${OVPN_DATA}:/etc/openvpn \
 		--net=none \
@@ -120,46 +121,46 @@ help:
 	@echo
 	@echo	"\033[1;31menv:\033[0m"
 	@echo	"\tSetup the environment before generating server/client keys with these targets:"
-	@echo	"\t* volume: Docker volume '$(OVPN_DATA)'"
-	@echo	"\t* passwd: Random password for self-signed cert in '$(OVPN_PASSWD)'"
-	@echo	"\t* genconfig: Generate default config in docker volume  '$(OVPN_DATA)'"
+	@echo	"\t* volume Docker volume '$(OVPN_DATA)'"
+	@echo	"\t* passwd Random password for self-signed cert in '$(OVPN_PASSWD)'"
+	@echo	"\t* genconfig Generate default config in docker volume  '$(OVPN_DATA)'"
 	@echo
-	@echo	"\033[1;31mvolume:\033[0m"
+	@echo	"\033[1;31mvolume\033[0m"
 	@echo	"\tCreate openvpn data volume"
 	@echo	"\t* Default volume '$(OVPN_DATA)'"
 	@echo
-	@echo	"\033[1;31mpasswd:\033[0m"
+	@echo	"\033[1;31mpasswd\033[0m"
 	@echo	"\tGenerate random password to '$(OVPN_PASSWD)'"
 	@echo
-	@echo	"\033[1;31mgenconfig:\033[0m"
+	@echo	"\033[1;31mgenconfig\033[0m"
 	@echo	"\tGenerate initial config"
 	@echo
-	@echo	"\033[1;31mserver:\033[0m"
+	@echo	"\033[1;31mserver\033[0m"
 	@echo	"\tGenerate server key"
 	@echo
-	@echo	"\033[1;31msave_server:\033[0m"
+	@echo	"\033[1;31msave_server\033[0m"
 	@echo	"\tSave necessary server files to '$(OVPN_SERVER_FILE)'"
 	@echo
-	@echo	"\033[1;31mload_server:\033[0m"
+	@echo	"\033[1;31mload_server\033[0m"
 	@echo	"\tLoad server config files from '$(OVPN_SERVER_FILE)'"
 	@echo
-	@echo	"\033[1;31mclient:\033[0m"
+	@echo	"\033[1;31mclient\033[0m"
 	@echo	"\tGenerate a client key, default name '$(OVPN_CLIENT)'"
-	@echo	"\tCustom name:"
+	@echo	"\tCustom name"
 	@echo	"\tmake OVPN_CLIENT=custom_name client"
 	@echo
-	@echo	"\033[1;31mget_client:\033[0m"
+	@echo	"\033[1;31mget_client\033[0m"
 	@echo	"\tGet client to '$(PWD)/$(OVPN_CLIENT).ovpn'"
-	@echo	"\tCustom name:"
+	@echo	"\tCustom name"
 	@echo	"\tmake OVPN_CLIENT=custom_name get_client"
 	@echo
-	@echo	"\033[1;31mlist:\033[0m"
+	@echo	"\033[1;31mlist\033[0m"
 	@echo	"\tList available client keys"
 	@echo
-	@echo	"\033[1;31mdump_env:\033[0m"
+	@echo	"\033[1;31mdump_env\033[0m"
 	@echo	"\tDump environment settings"
 	@echo
-	@echo	"__author__: tuan t. pham"
+	@echo	"__author__ tuan t. pham"
 
 dump_env:
 	@echo	"Dump environment variables:"
@@ -174,12 +175,14 @@ dump_env:
 	@echo	"OVPN_CN=$(OVPN_CN)"
 	@echo	"OVPN_RHOST=$(OVPN_RHOST)"
 	@echo	"OVPN_RPORT=$(OVPN_RPORT)"
+	@echo	"OVPN_DNS=$(OVPN_DNS)"
 
 	@echo	"OVPN_OUTPUT_DIR=$(OVPN_OUTPUT_DIR)"
 	@echo	"OVPN_CLIENT=$(OVPN_CLIENT)"
 	@echo	"OVPN_KEY_SIZE=$(OVPN_KEY_SIZE)"
 	@echo	"OVPN_SERVER_FILE=$(OVPN_SERVER_FILE)"
 
+.PHONY: rm_env rm_volume rm_passwd
 rm_env: rm_volume rm_passwd
 
 rm_volume:
@@ -187,3 +190,6 @@ rm_volume:
 
 rm_passwd:
 	rm ${OVPN_PASSWD}
+
+compose-openvpn.svg: Makefile
+	makefile2dot -d TB | dot -Tsvg -o compose-openvpn.svg

@@ -18,3 +18,5 @@ OVPN_CLIENT ?=vagrant
 OVPN_KEY_SIZE ?=4096
 OVPN_SERVER_FILE ?=/tmp/server.tar.xz
 OVPN_PKI_FILE ?=/tmp/pki.tar.xz
+
+OVPN_SCRIPTS ?=./scripts

@@ -12,6 +12,8 @@ services:
       # Use public ports like 433 or 8080 or something else
       - "${OVPN_RPORT:-1194}:1194/udp"
     restart: always
+    networks:
+      - ovpn_net
     volumes:
       - openvpn-data:/etc/openvpn
     command:
@@ -21,6 +23,9 @@ services:
       - --max-clients
       - "${MAX_CLIENTS}"
 
+networks:
+  ovpn_net:
+    external: true
 volumes:
   openvpn-data:
     external:
