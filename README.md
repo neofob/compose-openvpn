@@ -86,25 +86,27 @@ Default Environment Variables
 
 | `Env Variable`  | `Value` |
 |:---------------:|:-------:|
-| OVPN_IMG        | neofob/openvpn |
-| OVPN_TAG        | latest |
-| OVPN_DATA       | openvpn-data |
-| OVPN_PASSWD     | /tmp/ovpn_passwd.txt |
-| OVPN_CIPHER     | AES-256-GCM |
 | OVPN_AUTH       | SHA512 |
-| OVPN_PROTO      | udp |
-| OVPN_CN         | change.me |
-| OVPN_RHOST      | change.me |
-| OVPN_RPORT      | 443 |
+| OVPN_CIPHER     | AES-256-GCM |
 | OVPN_CLIENT     | vagrant |
+| OVPN_CN         | neofob.info |
+| OVPN_DATA       | openvpn-data-443 |
+| OVPN_DNS        | pihole.local |
+| OVPN_IMG        | neofob/openvpn |
 | OVPN_KEY_SIZE   | 4096 |
+| OVPN_PASSWD     | /tmp/ovpn_passwd.txt |
+| OVPN_PROTO      | udp |
+| OVPN_OUTPUT_DIR | /tmp |
+| OVPN_RHOST      | openvpn.local |
+| OVPN_RPORT      | 443 |
 | OVPN_SERVER_FILE | /tmp/server.tar.xz |
+| OVPN_TAG        | 3.17 |
 
-
-**Footnote:** As of `alpine:3.10.2`, there is a bug that when you run `make server`,
-the script/program `easyrsa` in `kylemanna/openvpn` will complain about failing to read
-`/etc/openvpn/pki/.rnd`. Build your own `OVPN_IMG` from [`docker-openvpn`][0] with `alpine:3.8`
-as your base image.
+Helper Scripts
+=============
+* [`genpass.sh`](./scripts/genpass.sh): generate random password to /tmp
+* [`create_client.sh`](./scripts/create_client.sh): create clients from the list in text file; defined in CLIENT env var
+* [`save_clients.sh`](./scripts/save_clients.sh): save all clients ovpn files to /tmp; `OVPN_OUTPUT_DIR`
 
 __author__: *tuan t. pham*
 
