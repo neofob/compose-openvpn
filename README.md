@@ -108,6 +108,17 @@ Helper Scripts
 * [`create_client.sh`](./scripts/create_client.sh): create clients from the list in text file; defined in CLIENT env var
 * [`save_clients.sh`](./scripts/save_clients.sh): save all clients ovpn files to /tmp; `OVPN_OUTPUT_DIR`
 
+Generate clients from the list `clients.txt`; make sure you have the generated passwd from the step `make env` to paste into terminal
+when it asks for it. It is save in the location `OVPN_PASSWD`.
+```
+CLIENTS=clients.txt ./scripts/create_clients.sh
+```
+
+Save all client:
+```
+make get_all
+```
+
 __author__: *tuan t. pham*
 
 [0]: https://github.com/kylemanna/docker-openvpn
