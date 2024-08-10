@@ -1,0 +1,61 @@
+# Special combination of OpenVPN and Pihole
+---
+services:
+  # pihole service
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    hostname: pihole
+    # For DHCP it is recommended to remove these ports and instead add: network_mode: "host"
+    ports:
+      - "53:53/udp"
+      - "80:80/tcp"
+    environment:
+      TZ: 'UTC'
+      WEBPASSWORD: 'ChangeMe'
+    # Volumes store your data between container upgrades
+    volumes:
+      - './etc-pihole:/etc/pihole'
+      - './etc-dnsmasq.d:/etc/dnsmasq.d'
+    #   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
+    cap_add:
+      - NET_ADMIN
+    restart: unless-stopped # Recommended but not required (DHCP needs NET_ADMIN)  
+    networks:
+      pihole_net:
+        ipv4_address: "${PIHOLE_IP}"
+
+  openvpn:
+    container_name: openvpn
+    # Build your own latest openvpn image
+    image: ${OVPN_IMG}:${OVPN_TAG}
+    hostname: openvpn
+    cap_add:
+      - NET_ADMIN
+    ports:
+      # Use public ports like 433 or 8080 or something else
+      - "${OVPN_RPORT:-1194}:1194/udp"
+    restart: always
+    networks:
+      - pihole_net
+    volumes:
+      - openvpn-data:/etc/openvpn
+    command:
+      - ovpn_run
+      - --cipher
+      - "${OVPN_CIPHER}"
+      - --max-clients
+      - "${MAX_CLIENTS}"
+
+volumes:
+  openvpn-data:
+    external:
+      name: ${OVPN_DATA}
+
+networks:
+  pihole_net:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 172.26.0.0/16
+         gateway: 172.26.0.1
