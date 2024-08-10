@@ -1,6 +1,5 @@
 ---
 # Simple docker-compose file for kylemanna/openvpn
-version: '3.7'
 services:
   openvpn:
     cap_add:
@@ -8,23 +7,28 @@ services:
     # Build your own latest openvpn image
     image: ${OVPN_IMG}:${OVPN_TAG}
     container_name: openvpn
+    hostname: openvpn
     ports:
       # Use public ports like 433 or 8080 or something else
       - "${OVPN_RPORT:-1194}:1194/udp"
     restart: always
     networks:
-      - ovpn_net
+      - openvpn_net
     volumes:
       - openvpn-data:/etc/openvpn
     command:
       - ovpn_run
       - --cipher
-      - AES-256-CBC
+      - AES-256-GCM
       - --max-clients
       - "${MAX_CLIENTS}"
 
+
+# Both pihole and opernvpn service need to be on the same network openvpn_net
+# So that the VPN client can access pihole internal address 172.20.0.2
+# Otherwise, you need to use external, host IP address for DNS.
 networks:
-  ovpn_net:
+  openvpn_net:
     external: true
 volumes:
   openvpn-data:
