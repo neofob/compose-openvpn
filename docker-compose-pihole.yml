@@ -37,7 +37,8 @@ services:
       - "${OVPN_RPORT:-1194}:1194/udp"
     restart: always
     networks:
-      - pihole_net
+      pihole_net:
+        ipv4_address: "${OPENVPN_IP}"
     volumes:
       - openvpn-data:/etc/openvpn
     command:
