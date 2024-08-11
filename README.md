@@ -119,6 +119,19 @@ Save all client:
 make get_all
 ```
 
+## On static IP for OpenVPN clients
+Create a text with filename `clients.txt` and place it at `/etc/openvpn` of the `openvpn` container.
+See [`clients-openvpn-example.txt`](./clients-openvpn-example.txt) for example format: `client_name,IP,`
+```
+# you can docker cp it as following
+docker cp clients.txt openvpn:/etc/openvpn/
+
+# or, do it the hacky way
+cp clients.txt /var/lib/docker/volumes/openvpn_8080/_data/ 
+```
+The IP is the IP address that the client will get for `tun0`, which must be in the same subnet at setup.
+You could change it by editing `/etc/openvpn/openvpn.conf` of the `openvpn` container.
+
 __author__: *tuan t. pham*
 
 [0]: https://github.com/kylemanna/docker-openvpn
