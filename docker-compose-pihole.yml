@@ -53,10 +53,11 @@ volumes:
     external:
       name: ${OVPN_DATA}
 
+# set this subnet the same as in .env
 networks:
   pihole_net:
     driver: bridge
     ipam:
      config:
-       - subnet: 172.26.0.0/16
-         gateway: 172.26.0.1
+       - subnet: 172.25.0.0/16
+         gateway: 172.25.0.1

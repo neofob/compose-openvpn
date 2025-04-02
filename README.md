@@ -90,7 +90,7 @@ Default Environment Variables
 | OVPN_CIPHER     | AES-256-GCM |
 | OVPN_CLIENT     | vagrant |
 | OVPN_CN         | neofob.info |
-| OVPN_DATA       | openvpn-data-443 |
+| OVPN_DATA       | openvpn-8080 |
 | OVPN_DNS        | pihole.local |
 | OVPN_IMG        | neofob/openvpn |
 | OVPN_KEY_SIZE   | 4096 |
@@ -98,9 +98,9 @@ Default Environment Variables
 | OVPN_PROTO      | udp |
 | OVPN_OUTPUT_DIR | /tmp |
 | OVPN_RHOST      | openvpn.local |
-| OVPN_RPORT      | 443 |
+| OVPN_RPORT      | 8080 |
 | OVPN_SERVER_FILE | /tmp/server.tar.xz |
-| OVPN_TAG        | 3.17 |
+| OVPN_TAG        | 3.21 |
 
 Helper Scripts
 =============
