@@ -40,7 +40,7 @@ server:
 		--log-driver=none \
 		-e EASYRSA_KEY_SIZE=${OVPN_KEY_SIZE} \
 		-v ${OVPN_DATA}:/etc/openvpn \
-		--rm -it \
+		--rm -i \
 		${OVPN_IMG}:${OVPN_TAG} \
 		ovpn_initpki
 
@@ -49,7 +49,7 @@ save_server:
 		--net=none \
 		--log-driver=none \
 		-v ${OVPN_DATA}:/etc/openvpn \
-		--rm -it ${OVPN_IMG}:${OVPN_TAG} \
+		--rm -i ${OVPN_IMG}:${OVPN_TAG} \
 		ovpn_copy_server_files
 	docker run -v ${OVPN_DATA}:/etc/openvpn \
 		--net=none \
@@ -87,7 +87,7 @@ client:
 		--net=none \
 		--log-driver=none \
 		-v ${OVPN_DATA}:/etc/openvpn \
-		--rm -it \
+		--rm -i \
 		${OVPN_IMG}:${OVPN_TAG} \
 		easyrsa build-client-full ${OVPN_CLIENT} nopass
 
@@ -95,7 +95,7 @@ get_client:
 	docker run -v ${OVPN_DATA}:/etc/openvpn \
 		--net=none \
 		--log-driver=none \
-		--rm -it \
+		--rm -i \
 		${OVPN_IMG}:${OVPN_TAG} \
 		ovpn_getclient ${OVPN_CLIENT} > ${OVPN_OUTPUT_DIR}/${OVPN_CLIENT}.ovpn
 
@@ -191,5 +191,5 @@ rm_volume:
 rm_passwd:
 	rm ${OVPN_PASSWD}
 
-compose-openvpn.svg: Makefile
-	makefile2dot -d TB | dot -Tsvg -o compose-openvpn.svg
+Makefile.svg: Makefile
+	makefile2dot -d TB | dot -Tsvg -o Makefile.svg
