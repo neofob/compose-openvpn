@@ -100,8 +100,8 @@ get_client:
 		ovpn_getclient ${OVPN_CLIENT} > ${OVPN_OUTPUT_DIR}/${OVPN_CLIENT}.ovpn
 
 get_all:
-	@echo "Get all clients to ${OVPN_OUTPUT_DIR}"
-	@echo -n "Running "
+	@unbuffer echo "Get all clients to ${OVPN_OUTPUT_DIR}"
+	@unbuffer echo -n "Running "
 	./scripts/save_clients.sh
 
 list:
