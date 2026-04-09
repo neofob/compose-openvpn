@@ -11,3 +11,5 @@ for c in $(cat ${CLIENTS}); do
 
     cat /tmp/answers.txt | OVPN_CLIENT=${c} make client
 done
+
+rm -f /tmp/answers.txt

@@ -28,8 +28,8 @@ genconfig:
 		-u "${OVPN_PROTO}://${OVPN_RHOST}:${OVPN_RPORT}" \
 		-e 'topology subnet' \
 		-n ${OVPN_DNS} \
-		-r 192.168.42.0/24 \
-		-s 192.168.42.0/24 \
+		-r 192.168.26.0/24 \
+		-s 192.168.26.0/24 \
 		-C ${OVPN_CIPHER} \
 		-a ${OVPN_AUTH}
 

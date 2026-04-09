@@ -108,9 +108,10 @@ Helper Scripts
 * [`create_client.sh`](./scripts/create_client.sh): create clients from the list in text file; defined in CLIENT env var
 * [`save_clients.sh`](./scripts/save_clients.sh): save all clients ovpn files to /tmp; `OVPN_OUTPUT_DIR`
 
-Generate clients from the list `clients.txt`; make sure you have the generated passwd from the step `make env` to paste into terminal
-when it asks for it. It is save in the location `OVPN_PASSWD`.
-```
+Generate clients from the list `clients.txt`; make sure you have the generated
+passwd from the step `make env` to paste into terminal when it asks for it.
+It is saved in the location `OVPN_PASSWD`.
+```bash
 CLIENTS=clients.txt ./scripts/create_clients.sh
 ```
 
@@ -120,8 +121,16 @@ make get_all
 ```
 
 ## On static IP for OpenVPN clients
-Create a text with filename `clients.txt` and place it at `/etc/openvpn` of the `openvpn` container.
+* Create a text with filename `clients.txt` and place it at `/etc/openvpn` of the `openvpn` container.
+* Add `ifconfig-pool-persist /etc/openvpn/clients.txt` to `/etc/openvpn/openvpn.conf` of the openvpn server
+
 See [`clients-openvpn-example.txt`](./clients-openvpn-example.txt) for example format: `client_name,IP,`
+The last line does not have `,`. You can use the script [`gen_static_ip.sh`][1] to generate the config file.
+```bash
+CLIENT_LIST=clients.txt START_IP=192.168.42.2 ./scripts/gen_static_ip.sh > openvpn-clients.txt
+```
+
+
 ```
 # you can docker cp it as following
 docker cp clients.txt openvpn:/etc/openvpn/
