@@ -121,28 +121,38 @@ make get_all
 ```
 
 ## On static IP for OpenVPN clients
-* Create a text with filename `clients.txt` and place it at `/etc/openvpn` of the `openvpn` container.
 * Add `ifconfig-pool-persist /etc/openvpn/clients.txt` to `/etc/openvpn/openvpn.conf` of the openvpn server
+* Create a text with filename `clients.txt` and place it at `/etc/openvpn` of the `openvpn` container.
 
+1. Update server `openvpn.conf`
+Add `ifconfig-pool-persist clients.txt` to server's `openvpn.conf`
+```bash
+echo "ifconfig-pool-persist clients.txt" >> /var/lib/docker/volumes/openvpn_8080/_data/openvpn.conf
+```
+
+2. Copy clients.txt to openvpn server
+Create a text with filename `clients.txt` and place it at `/etc/openvpn` of the `openvpn` container.
 See [`clients-openvpn-example.txt`](./clients-openvpn-example.txt) for example format: `client_name,IP,`
 The last line does not have `,`. You can use the script [`gen_static_ip.sh`][1] to generate the config file.
 ```bash
 CLIENT_LIST=clients.txt START_IP=192.168.42.2 ./scripts/gen_static_ip.sh > openvpn-clients.txt
 ```
 
-
-```
 # you can docker cp it as following
+```bash
 docker cp clients.txt openvpn:/etc/openvpn/
+```
 
 # or, do it the hacky way
+```bash
 cp clients.txt /var/lib/docker/volumes/openvpn_8080/_data/ 
 ```
+
 The IP is the IP address that the client will get for `tun0`, which must be in the same subnet at setup.
 You could change it by editing `/etc/openvpn/openvpn.conf` of the `openvpn` container.
 
 __author__: *tuan t. pham*
 
-[0]: https://github.com/kylemanna/docker-openvpn
-[1]: https://github.com/kylemanna/docker-openvpn/tree/master/docs
+[0]: https://github.com/neofob/docker-openvpn
+[1]: https://github.com/neofob/docker-openvpn/tree/master/docs
 [2]: ./default_settings.env
