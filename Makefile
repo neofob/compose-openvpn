@@ -99,10 +99,11 @@ get_client:
 		${OVPN_IMG}:${OVPN_TAG} \
 		ovpn_getclient ${OVPN_CLIENT} > ${OVPN_OUTPUT_DIR}/${OVPN_CLIENT}.ovpn
 
+# apt-get install -yq expect
 get_all:
 	@unbuffer echo "Get all clients to ${OVPN_OUTPUT_DIR}"
 	@unbuffer echo -n "Running "
-	./scripts/save_clients.sh
+	@unbuffer ./scripts/save_clients.sh
 
 list:
 	docker run -v ${OVPN_DATA}:/etc/openvpn \

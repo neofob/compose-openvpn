@@ -34,7 +34,7 @@ move it to a safe place. (preferably, /tmp is `tmpfs`).
 Generate server files
 =====================
 You will be asked for password which is saved from `make env` step. You could paste it here
-from `cat /tmp/ovpn_passwd.txt | xclip -selection c`
+from `cat /tmp/ovpn_passwd.txt | xclip -r -selection c`
 ```
 $ make server
 ```
