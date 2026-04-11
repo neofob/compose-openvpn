@@ -1,10 +1,10 @@
-OVPN_IMG ?=kylemanna/openvpn
+OVPN_IMG ?=neofob/openvpn
 OVPN_TAG ?=latest
 
 OVPN_DATA ?=openvpn-data
 OVPN_OUTPUT_DIR ?=/tmp
 OVPN_PASSWD ?=${OVPN_OUTPUT_DIR}/ovpn_passwd.txt
-OVPN_CIPHER ?=AES-256-CBC
+OVPN_CIPHER ?=AES-256-GCM
 OVPN_AUTH ?=SHA512
 OVPN_PROTO ?=udp
 # Common Name
