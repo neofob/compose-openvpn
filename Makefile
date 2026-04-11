@@ -189,7 +189,7 @@ rm_volume:
 	docker volume rm ${OVPN_DATA}
 
 rm_passwd:
-	rm ${OVPN_PASSWD}
+	rm -fr ${OVPN_PASSWD}
 
 Makefile.svg: Makefile
 	makefile2dot -d TB | dot -Tsvg -o Makefile.svg
