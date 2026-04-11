@@ -139,20 +139,20 @@ The last line does not have `,`. You can use the script [`gen_static_ip.sh`][1] 
 CLIENT_LIST=clients.txt START_IP=192.168.26.2 ./scripts/gen_static_ip.sh > openvpn-clients.txt
 ```
 
-# you can docker cp it as following
+
 ```bash
+# you can docker cp it as following
 docker cp clients.txt openvpn:/etc/openvpn/
 ```
 
-# or, do it the hacky way
+
 ```bash
+# or, do it the hacky way
 cp clients.txt /var/lib/docker/volumes/openvpn_443/_data/ 
 ```
 
-
 The IP is the IP address that the client will get for `tun0`, which must be in the same subnet at setup.
 You could change it by editing `/etc/openvpn/openvpn.conf` of the `openvpn` container.
-
 
 
 __author__: *tuan t. pham*
