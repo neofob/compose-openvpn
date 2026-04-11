@@ -90,20 +90,21 @@ Default Environment Variables
 | OVPN_CIPHER     | AES-256-GCM |
 | OVPN_CLIENT     | vagrant |
 | OVPN_CN         | neofob.info |
-| OVPN_DATA       | openvpn-8080 |
+| OVPN_DATA       | openvpn-443 |
 | OVPN_DNS        | pihole.local |
 | OVPN_IMG        | neofob/openvpn |
 | OVPN_KEY_SIZE   | 4096 |
+| OVPN_OUTPUT_DIR | /tmp |
 | OVPN_PASSWD     | /tmp/ovpn_passwd.txt |
 | OVPN_PROTO      | udp |
-| OVPN_OUTPUT_DIR | /tmp |
 | OVPN_RHOST      | openvpn.local |
-| OVPN_RPORT      | 8080 |
+| OVPN_RPORT      | 443 |
 | OVPN_SERVER_FILE | /tmp/server.tar.xz |
-| OVPN_TAG        | 3.21 |
+| OVPN_TAG        | debian |
+
 
 Helper Scripts
-=============
+==============
 * [`genpass.sh`](./scripts/genpass.sh): generate random password to /tmp
 * [`create_client.sh`](./scripts/create_client.sh): create clients from the list in text file; defined in CLIENT env var
 * [`save_clients.sh`](./scripts/save_clients.sh): save all clients ovpn files to /tmp; `OVPN_OUTPUT_DIR`
@@ -135,7 +136,7 @@ Create a text with filename `clients.txt` and place it at `/etc/openvpn` of the 
 See [`clients-openvpn-example.txt`](./clients-openvpn-example.txt) for example format: `client_name,IP,`
 The last line does not have `,`. You can use the script [`gen_static_ip.sh`][1] to generate the config file.
 ```bash
-CLIENT_LIST=clients.txt START_IP=192.168.42.2 ./scripts/gen_static_ip.sh > openvpn-clients.txt
+CLIENT_LIST=clients.txt START_IP=192.168.26.2 ./scripts/gen_static_ip.sh > openvpn-clients.txt
 ```
 
 # you can docker cp it as following
@@ -145,11 +146,14 @@ docker cp clients.txt openvpn:/etc/openvpn/
 
 # or, do it the hacky way
 ```bash
-cp clients.txt /var/lib/docker/volumes/openvpn_8080/_data/ 
+cp clients.txt /var/lib/docker/volumes/openvpn_443/_data/ 
 ```
+
 
 The IP is the IP address that the client will get for `tun0`, which must be in the same subnet at setup.
 You could change it by editing `/etc/openvpn/openvpn.conf` of the `openvpn` container.
+
+
 
 __author__: *tuan t. pham*
 
